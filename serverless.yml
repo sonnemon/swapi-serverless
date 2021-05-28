@@ -1,0 +1,80 @@
+service: swapi-serverless
+
+plugins:
+  - serverless-offline
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  stage: dev
+  environment:
+    VEHICLE_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action: 
+        - dynamodb:Query
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.VEHICLE_TABLE}"
+
+resources:
+  Resources:
+    VehicleTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.VEHICLE_TABLE}
+        AttributeDefinitions:
+          - AttributeName: vehicle_id
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
+        KeySchema:
+          - AttributeName: vehicle_id
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: vehicle_id-index
+            KeySchema:
+              - AttributeName: vehicle_id
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          
+functions:  
+  planet:
+    handler: api/planet.handler
+    events:
+      - http: 
+          path: planets/{planetId}
+          method: get
+          cors: true
+  person:
+    handler: api/person.handler
+    events:
+      - http: 
+          path: people/{personId}
+          method: get
+          cors: true
+  add-vehicle:
+    handler: api/add-vehicle.handler
+    description: POST /vehicle
+    events:
+      - http: 
+          path: vehicle
+          method: post
+          cors: true
+  list-vehicle:
+    handler: api/list-vehicle.handler
+    description: GET /vehicles
+    events:
+      - http: 
+          path: vehicles
+          method: get
+          cors: true
