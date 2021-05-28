@@ -3,7 +3,6 @@ const axios = require('axios');
 const API_BASE = 'http://swapi.py4e.com/api/planets/';
 
 module.exports.handler = async (event) => {
-  // const { planetId } = JSON.parse(event.body);
   const { planetId } = event.pathParameters;
   try {
     const { data } = await axios.get(`${API_BASE}${planetId}`);

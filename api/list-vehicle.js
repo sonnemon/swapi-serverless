@@ -11,7 +11,6 @@ exports.handler = async (event) => {
         TableName: tableName,
       })
       .promise();
-
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },

@@ -9,7 +9,7 @@ module.exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        name: data.name,
+        nombre: data.name,
         altura: data.height,
         peso: data.mass,
         color_pelo: data.hair_color,
