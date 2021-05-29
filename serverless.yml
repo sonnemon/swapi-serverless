@@ -14,6 +14,7 @@ provider:
       Action: 
         - dynamodb:Query
         - dynamodb:PutItem
+        - dynamodb:Scan
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.VEHICLE_TABLE}"
 
 resources:

@@ -2,6 +2,9 @@
 
 The REST API to the example app is described below.
 
+### Base URL
+`https://5gd48bqz2m.execute-api.us-east-1.amazonaws.com/prod`
+
 ### Request GET Planet
 
 `GET /planets/{planet_id}`
